@@ -176,8 +176,6 @@ public class HomeActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 getLocationUpdate();
-
-                enableGPS();
             }
         });
         getLocationUpdate();
@@ -284,6 +282,7 @@ public class HomeActivity extends AppCompatActivity implements
                 if (!checkPermissions()) {
                     requestPermissions();
                 } else {
+                    enableGPS();
                     mService.requestLocationUpdates(Utils.getFloat(distance.getEditText().getText().toString()));
                 }
             }
