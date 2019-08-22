@@ -1,0 +1,107 @@
+{
+  "project_info": {
+    "project_number": "197554508031",
+    "firebase_url": "https://crm-app-79653.firebaseio.com",
+    "project_id": "crm-app-79653",
+    "storage_bucket": "crm-app-79653.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:197554508031:android:6bdcf2eb55175386",
+        "android_client_info": {
+          "package_name": "com.hman.location"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "197554508031-1se4cbeh4ls6sdl4kmvq8jvh7145ctvg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6NBgAEuvFewBJI1pE1F7nzw0W1vxXSwo"
+        },
+        {
+          "current_key": "AIzaSyBt62nSlXCxb86xiDUQhqr3woR-Ge9tmsg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "197554508031-1se4cbeh4ls6sdl4kmvq8jvh7145ctvg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:197554508031:android:90ab9f077df6c8ff",
+        "android_client_info": {
+          "package_name": "com.houseman.android.crmapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "197554508031-1se4cbeh4ls6sdl4kmvq8jvh7145ctvg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6NBgAEuvFewBJI1pE1F7nzw0W1vxXSwo"
+        },
+        {
+          "current_key": "AIzaSyBt62nSlXCxb86xiDUQhqr3woR-Ge9tmsg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "197554508031-1se4cbeh4ls6sdl4kmvq8jvh7145ctvg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:197554508031:android:04bf066cce125159",
+        "android_client_info": {
+          "package_name": "com.houseman.android.crmapp.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "197554508031-1se4cbeh4ls6sdl4kmvq8jvh7145ctvg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6NBgAEuvFewBJI1pE1F7nzw0W1vxXSwo"
+        },
+        {
+          "current_key": "AIzaSyBt62nSlXCxb86xiDUQhqr3woR-Ge9tmsg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "197554508031-1se4cbeh4ls6sdl4kmvq8jvh7145ctvg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
