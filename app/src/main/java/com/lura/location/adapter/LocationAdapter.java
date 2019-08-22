@@ -13,7 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hman.location.R;
+import com.lura.location.R;
 import com.lura.location.db.LocationDetails;
 
 import java.util.List;

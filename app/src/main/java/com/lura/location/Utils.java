@@ -4,9 +4,6 @@ import android.content.Context;
 import android.location.Location;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
-import com.hman.location.R;
-
 import java.text.DateFormat;
 import java.util.Date;
 

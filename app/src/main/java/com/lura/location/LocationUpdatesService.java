@@ -33,7 +33,6 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.hman.location.R;
 import com.lura.location.db.HmanLocationDatabase;
 import com.lura.location.db.LocationDetails;
 

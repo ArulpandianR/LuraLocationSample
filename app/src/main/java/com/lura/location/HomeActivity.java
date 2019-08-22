@@ -23,6 +23,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -45,10 +46,17 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
-import com.hman.location.BuildConfig;
-import com.hman.location.R;
 import com.lura.location.adapter.LocationAdapter;
 import com.lura.location.db.HmanLocationDatabase;
 import com.lura.location.db.LocationDetails;
@@ -98,6 +106,7 @@ public class HomeActivity extends AppCompatActivity implements
     private RecyclerView locationRecyclerView;
     private List<LocationDetails> locationDetailList;
     LocationAdapter locationAdapter;
+    private final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
     // Monitors the state of the connection to the service.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -164,7 +173,44 @@ public class HomeActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 getLocationUpdate();
-                // locationResult();
+
+                LocationRequest locationRequest = LocationRequest.create();
+                locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+
+                Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(HomeActivity.this)
+                        .checkLocationSettings(builder.build());
+
+                result.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("Exception", "" + e);
+                        if (e instanceof ApiException) {
+                            ApiException exception = (ApiException) e;
+                            switch (exception.getStatusCode()) {
+                                case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                                    // Location settings are not satisfied. But could be fixed by showing the
+                                    // user a dialog.
+                                    try {
+                                        // Cast to a resolvable exception.
+                                        ResolvableApiException resolvable = (ResolvableApiException) exception;
+                                        // Show the dialog by calling startResolutionForResult(),
+                                        // and check the result in onActivityResult().
+                                        resolvable.startResolutionForResult(
+                                                HomeActivity.this, REQUEST_CHECK_SETTINGS_GPS);
+                                    } catch (IntentSender.SendIntentException | ClassCastException ee) {
+                                        // Ignore the error.
+                                    }
+                                    break;
+                                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                                    // Location settings are not satisfied. However, we have no way to fix the
+                                    // settings so we won't show the dialog.
+                                    break;
+                            }
+                        }
+                    }
+                });
             }
         });
         getLocationUpdate();

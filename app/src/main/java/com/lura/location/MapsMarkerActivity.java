@@ -28,7 +28,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.hman.location.R;
 import com.lura.location.db.HmanLocationDatabase;
 import com.lura.location.db.LocationDetails;
 
@@ -199,6 +198,9 @@ public class MapsMarkerActivity extends AppCompatActivity
                         // Set the map's camera position to the current location of the device.
                         mLastKnownLocation = task.getResult();
                         mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                        if (mLastKnownLocation == null) {
+                            return;
+                        }
                         LatLng currentLocation = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
 
                         mMap.addMarker(new MarkerOptions().position(currentLocation)
