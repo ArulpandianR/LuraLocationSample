@@ -174,46 +174,50 @@ public class HomeActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 getLocationUpdate();
 
-                LocationRequest locationRequest = LocationRequest.create();
-                locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-                LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
-
-                Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(HomeActivity.this)
-                        .checkLocationSettings(builder.build());
-
-                result.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("Exception", "" + e);
-                        if (e instanceof ApiException) {
-                            ApiException exception = (ApiException) e;
-                            switch (exception.getStatusCode()) {
-                                case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                                    // Location settings are not satisfied. But could be fixed by showing the
-                                    // user a dialog.
-                                    try {
-                                        // Cast to a resolvable exception.
-                                        ResolvableApiException resolvable = (ResolvableApiException) exception;
-                                        // Show the dialog by calling startResolutionForResult(),
-                                        // and check the result in onActivityResult().
-                                        resolvable.startResolutionForResult(
-                                                HomeActivity.this, REQUEST_CHECK_SETTINGS_GPS);
-                                    } catch (IntentSender.SendIntentException | ClassCastException ee) {
-                                        // Ignore the error.
-                                    }
-                                    break;
-                                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                                    // Location settings are not satisfied. However, we have no way to fix the
-                                    // settings so we won't show the dialog.
-                                    break;
-                            }
-                        }
-                    }
-                });
+                enableGPS();
             }
         });
         getLocationUpdate();
+    }
+
+    private void enableGPS() {
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+
+        Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(HomeActivity.this)
+                .checkLocationSettings(builder.build());
+
+        result.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("Exception", "" + e);
+                if (e instanceof ApiException) {
+                    ApiException exception = (ApiException) e;
+                    switch (exception.getStatusCode()) {
+                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                            // Location settings are not satisfied. But could be fixed by showing the
+                            // user a dialog.
+                            try {
+                                // Cast to a resolvable exception.
+                                ResolvableApiException resolvable = (ResolvableApiException) exception;
+                                // Show the dialog by calling startResolutionForResult(),
+                                // and check the result in onActivityResult().
+                                resolvable.startResolutionForResult(
+                                        HomeActivity.this, REQUEST_CHECK_SETTINGS_GPS);
+                            } catch (IntentSender.SendIntentException | ClassCastException ee) {
+                                // Ignore the error.
+                            }
+                            break;
+                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                            // Location settings are not satisfied. However, we have no way to fix the
+                            // settings so we won't show the dialog.
+                            break;
+                    }
+                }
+            }
+        });
     }
 
     @SuppressLint("StaticFieldLeak")
