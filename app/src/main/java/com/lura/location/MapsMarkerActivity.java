@@ -1,13 +1,17 @@
 package com.lura.location;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +25,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -28,8 +33,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.maps.android.ui.IconGenerator;
 import com.lura.location.db.HmanLocationDatabase;
 import com.lura.location.db.LocationDetails;
+import com.lura.location.model.MarkerDetails;
 
 import java.util.List;
 
@@ -203,9 +210,10 @@ public class MapsMarkerActivity extends AppCompatActivity
                         }
                         LatLng currentLocation = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
 
-                        mMap.addMarker(new MarkerOptions().position(currentLocation)
-                                .title("Marker in Sydney"));
+                        mMap.addMarker(new MarkerOptions().position(currentLocation));
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+
+                        addCustomMapMarkerInfoWindow(currentLocation);
                     } else {
                         Log.d(TAG, "Current location is null. Using defaults.");
                         Log.e(TAG, "Exception: %s", task.getException());
@@ -218,6 +226,59 @@ public class MapsMarkerActivity extends AppCompatActivity
         } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage());
         }
+    }
+
+    private void addCustomMapMarkerInfoWindow(LatLng currentLocation) {
+        IconGenerator iconGenerator = new IconGenerator(MapsMarkerActivity.this);
+        iconGenerator.setBackground(getDrawable(android.R.color.transparent));
+        View customMapIconLayout = getLayoutInflater().inflate(R.layout.custom_map_icon, null);
+        ImageView mClusterImageView = customMapIconLayout.findViewById(R.id.map_icon_image);
+        final TextView mapIconText = customMapIconLayout.findViewById(R.id.map_icon_text);
+        iconGenerator.setContentView(customMapIconLayout);
+
+        MarkerDetails markerDetails = new MarkerDetails();
+        markerDetails.setName("Lura Labs");
+
+        mapIconText.setText(markerDetails.getName().substring(0, 2).toUpperCase());
+        mClusterImageView.setImageDrawable(getResources().getDrawable(R.drawable.r_1));
+        Bitmap icon = iconGenerator.makeIcon();
+        MarkerOptions markerOptions = new MarkerOptions().position(currentLocation);
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+        Marker marker = mMap.addMarker(markerOptions);
+        marker.setTag(markerDetails);
+
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+            @Override
+            // Return null here, so that getInfoContents() is called next.
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                // Inflate the layouts for the info window, title and snippet.
+                View infoWindow = getLayoutInflater().inflate(R.layout.custom_info_con, (ViewGroup) findViewById(R.id.map),false);
+
+                TextView title = infoWindow.findViewById(R.id.map_info_name);
+                //TextView date = infoWindow.findViewById(R.id.map_info_date);
+                //TextView time = infoWindow.findViewById(R.id.check_in_time);
+                //TextView historyDetails = infoWindow.findViewById(R.id.history_details);
+                MarkerDetails markerDetails = (MarkerDetails) marker.getTag();
+                title.setText(markerDetails.getName());
+                return infoWindow;
+            }
+        });
+        /*mMap.setOnInfoWindowClickListener(marker1 -> {
+            CheckInDetails details = (CheckInDetails) marker.getTag();
+            Intent intent = new Intent(CheckInMapActivity.this, HomeActivity.class);
+            intent.putExtra("user_id", details.getUserId());
+            startActivity(intent);
+            finish();
+
+        });*/
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15f));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f));
     }
 
     private void updateLocationUI() {
